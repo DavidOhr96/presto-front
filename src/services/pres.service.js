@@ -6,7 +6,8 @@ const STORAGE_KEY = 'pres'
 export const presService = {
     query,
     getByTitle,
-    remove
+    remove,
+    create
 }
 window.cs = presService
 
