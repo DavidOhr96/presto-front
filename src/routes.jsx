@@ -1,5 +1,5 @@
 import { HomePage } from './pages/home.jsx'
-import { PresPreview } from './pages/pres-preview.jsx'
+import { PresPage} from './pages/pres-page.jsx'
 
 const routes = [
     {
@@ -8,8 +8,8 @@ const routes = [
         label: 'Home 🏠',
     },
     {
-        path: 'pres',
-        component: <PresPreview />,
+        path: 'pres/:title',
+        component: <PresPage />,
         label: 'Pres'
     }
 ]

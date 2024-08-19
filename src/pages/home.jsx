@@ -3,6 +3,7 @@ import routes from '../routes'
 import { useState, useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { presService } from "../services/pres.service"
+import { PresPreview } from "../cmps/pres-preview"
 
 
 export function HomePage() {
@@ -29,8 +30,10 @@ export function HomePage() {
             <div>
                 <h3>Presentations:</h3>
                 {press.length > 0 ? (
-                    press.map(p => <div key={p.id}>{p.title}</div>)
-                ) : (
+                    press.map(p =>(
+
+                        <PresPreview key={p.id} presentation={p} />
+               ) )) : (
                     <p>No presentations available</p>
                 )}
             </div>
