@@ -24,7 +24,7 @@ async function save(slide){
     if(slide._id){
         savedSlide=await httpService.put(`slide/${slide._id}`,slide)
     }else{
-        savedSlide=await httpService.post('slide'.car)
+        savedSlide=await httpService.post('slide',slide)
     }
     return savedSlide
     }
