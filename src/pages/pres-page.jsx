@@ -7,6 +7,7 @@ export function PresPage() {
     const { title } = useParams()
     const [pres, setPres] = useState(null)
     const [slide, setSlide] = useState(null)
+    const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
 
     useEffect(() => {
         async function fetchPres() {
@@ -20,34 +21,62 @@ export function PresPage() {
         fetchPres()
     }, [title])
 
+    // useEffect(() => {
+    //     async function slideNav() {
+    //         if (pres && pres.slides.length > 0) {
+    //             try {
+    //                 const calledSlide = await slideService.getById(pres.slides[0])
+    //                 setSlide(calledSlide)
+    //             } catch (err) {
+    //                 console.error('Error fetching slide:', err)
+    //             }
+    //         }
+    //     }
+    //     slideNav()
+    // }, [pres]) 
+
     useEffect(() => {
-        async function slideNav() {
+        async function fetchSlide() {
             if (pres && pres.slides.length > 0) {
                 try {
-                    const calledSlide = await slideService.getById(pres.slides[0])
+                    const slideId = pres.slides[currentSlideIndex]
+                    const calledSlide = await slideService.getById(slideId)
                     setSlide(calledSlide)
                 } catch (err) {
                     console.error('Error fetching slide:', err)
                 }
             }
         }
-        slideNav()
-    }, [pres]) 
+        fetchSlide()
+    }, [pres, currentSlideIndex])
 
-    if (!pres||!slide) return <p>Loading...</p>
+    if (!pres || !slide) return <p>Loading...</p>
 
-    async function slideNav() {
-        console.log(pres.slides[0])
-        const calledSlide = await slideService.getById(pres.slides[0])
-        setSlide(calledSlide)
+    function navigateSlides(direction) {
+        const newIndex = currentSlideIndex + direction
+        if (newIndex >= 0 && newIndex < pres.slides.length) {
+            setCurrentSlideIndex(newIndex)
+        }
     }
-    console.log(pres.slides, 'slide', slide)
+
+    console.log(pres.slides, 'slide', slide, )
     return (
         <div>
-            <h2>{slide.header}</h2>
             <h2>{pres.title}</h2>
             <p>{pres.description}</p>
 
+            <div>
+                <h3>{slide.header}</h3>
+                <h3>{slide._id}</h3>
+                <p>{slide.content}</p>
+
+                <button onClick={() => navigateSlides(-1)} disabled={currentSlideIndex === 0}>
+                    Previous Slide
+                </button>
+                <button onClick={() => navigateSlides(1)} disabled={currentSlideIndex === pres.slides.length - 1}>
+                    Next Slide
+                </button>
+            </div>
         </div>
-    );
+    )
 }
