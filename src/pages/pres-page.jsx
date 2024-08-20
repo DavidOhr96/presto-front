@@ -45,10 +45,22 @@ export function PresPage() {
             setCurrentSlideIndex(newIndex)
         }
     }
+
+    async function deleteSlide() {
+        try {
+            await slideService.remove(slide._id)
+            const updatedSlides = pres.slides.filter(s => s !== slide._id)
+            const updatedPres = { ...pres, slides: updatedSlides }
+            setPres(updatedPres)
+            setCurrentSlideIndex(currentSlideIndex-1)
+        } catch (err) {
+            console.error('Error deleting slide:', err)
+        }
+    }
     function goHome() {
         navigate('/')
     }
-    console.log(pres.slides, 'slide', slide,)
+
     return (
         <div>
             <button onClick={goHome}>Back to Home</button> {/* Back to Home Button */}
@@ -56,7 +68,7 @@ export function PresPage() {
             <p>{pres.description}</p>
 
             <div>
-                <h3>{slide.header}</h3>
+                <h3>{slide.subHeader}</h3>
                 <h3>{slide._id}</h3>
                 <p>{slide.content}</p>
 
@@ -66,7 +78,9 @@ export function PresPage() {
                 <button onClick={() => navigateSlides(1)} disabled={currentSlideIndex === pres.slides.length - 1}>
                     Next Slide
                 </button>
+                <button onClick={deleteSlide}>Delete Slide</button>
             </div>
         </div>
     )
 }
+
