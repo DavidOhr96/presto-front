@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { presService } from '../services/pres.service'
 import { slideService } from '../services/slide.service'
 
@@ -8,6 +8,7 @@ export function PresPage() {
     const [pres, setPres] = useState(null)
     const [slide, setSlide] = useState(null)
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
+    const navigate = useNavigate()
 
     useEffect(() => {
         async function fetchPres() {
@@ -20,20 +21,6 @@ export function PresPage() {
         }
         fetchPres()
     }, [title])
-
-    // useEffect(() => {
-    //     async function slideNav() {
-    //         if (pres && pres.slides.length > 0) {
-    //             try {
-    //                 const calledSlide = await slideService.getById(pres.slides[0])
-    //                 setSlide(calledSlide)
-    //             } catch (err) {
-    //                 console.error('Error fetching slide:', err)
-    //             }
-    //         }
-    //     }
-    //     slideNav()
-    // }, [pres]) 
 
     useEffect(() => {
         async function fetchSlide() {
@@ -58,10 +45,13 @@ export function PresPage() {
             setCurrentSlideIndex(newIndex)
         }
     }
-
-    console.log(pres.slides, 'slide', slide, )
+    function goHome() {
+        navigate('/')
+    }
+    console.log(pres.slides, 'slide', slide,)
     return (
         <div>
+            <button onClick={goHome}>Back to Home</button> {/* Back to Home Button */}
             <h2>{pres.title}</h2>
             <p>{pres.description}</p>
 
