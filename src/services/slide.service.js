@@ -20,8 +20,10 @@ async function getById(slideId){
 }
 
 async function save(slide){
+    console.log(slide)
     let savedSlide
     if(slide._id){
+        console.log(slide._id)
         savedSlide=await httpService.put(`slide/${slide._id}`,slide)
     }else{
         savedSlide=await httpService.post('slide',slide)
