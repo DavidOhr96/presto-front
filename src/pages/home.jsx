@@ -11,7 +11,7 @@ export function HomePage() {
     useEffect(() => {
         async function fetchPress() {
             try {
-                const pressData = await presService.query() 
+                const pressData = await presService.query()
                 setPress(pressData)
             } catch (err) {
                 console.error('Error fetching presentations:', err)
@@ -20,20 +20,37 @@ export function HomePage() {
         fetchPress()
     }, [])
 
+    async function addNewPres() {
+        try {
+            const newPres = { title: 'New Presentation3', description: 'Description of the new presentation', slides: [] }
+            const addedPres = await presService.create(newPres)
+            setPress(prevPress => [...prevPress, addedPres])
+        } catch (err) {
+            console.error('Error adding presentation:', err)
+        }
+    }
+
+    async function deletePres(title) {
+        try {
+            await presService.remove(title)
+            setPress(prevPress => prevPress.filter(p => p.title !== title))
+        } catch (err) {
+            console.error('Error deleting presentation:', err)
+        }
+    }
+
     return (
         <section>
-            <h2>im home</h2>
-            <nav>
-                {routes.map(route => <NavLink key={route.path} to={route.path}>{route.label}</NavLink>)}
-            </nav>
-
             <div>
                 <h3>Presentations:</h3>
+                <button onClick={addNewPres}>Add New Presentation</button> {/* Add Presentation Button */}
                 {press.length > 0 ? (
-                    press.map(p =>(
-
-                        <PresPreview key={p.id} presentation={p} />
-               ) )) : (
+                    press.map(p => (
+                        <div key={p.id}>
+                            <PresPreview presentation={p} />
+                            <button onClick={() => deletePres(p.title)}>Delete</button> {/* Delete Button */}
+                        </div>
+                    ))) : (
                     <p>No presentations available</p>
                 )}
             </div>
