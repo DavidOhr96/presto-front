@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { presService } from '../services/pres.service'
 import { slideService } from '../services/slide.service'
+import { SlideModal } from '../cmps/slide-modal'
 
 export function PresPage() {
     const { title } = useParams()
     const [pres, setPres] = useState(null)
     const [slide, setSlide] = useState(null)
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
-    const [slideData, setSlideData] = useState(slide)
+    const [slideData, setSlideData] = useState({ header: '', subHeader: '', content: '' })
     const [editingSlideId, setEditingSlideId] = useState(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const navigate = useNavigate()
@@ -40,32 +41,31 @@ export function PresPage() {
         fetchSlide()
     }, [pres, currentSlideIndex])
 
-    if (!pres || !slide) return <p>Loading...</p>
-
+    
     function navigateSlides(direction) {
         const newIndex = currentSlideIndex + direction
         if (newIndex >= 0 && newIndex < pres.slides.length) {
             setCurrentSlideIndex(newIndex)
         }
     }
-
-    async function saveSlide(slideId) {
+    
+    async function saveSlide() {
         try {
-            if (slideId) {
+            if (editingSlideId) {
                 await slideService.save(slideData)
                 setSlide(slideData)
             } else {
                 const newSlide = await slideService.save(slideData)
-                constupdatedPres = { ...pres, slides: [...pres.slides, newSlide._id] }
+                const updatedPres = { ...pres, slides: [...pres.slides, newSlide._id] }
                 setPres(updatedPres)
             }
-            setSlideData({ header: '', content: '' })
+            setSlideData({ header: '', subHeader: '', content: '' })
             toggleModal(0)
         } catch (err) {
             console.error('Error saving slide:', err)
         }
     }
-
+    
     async function deleteSlide() {
         try {
             await slideService.remove(slide._id)
@@ -77,37 +77,39 @@ export function PresPage() {
             console.error('Error deleting slide:', err)
         }
     }
+    
     function goHome() {
         navigate('/')
     }
-
+    
     function toggleModal(state) {
         setIsModalOpen(Boolean(state))
     }
-    function openModal(slideId) {
+    
+    function prepModal(slideId) {
         if (slideId) {
             setEditingSlideId(slideId)
             setSlideData(slide)
-            toggleModal(true)
         } else {
-            console.log('wow look nothing')
             setEditingSlideId(null)
-            setSlideData({ presTitle: pres.title, header: '', content: '' })
-            toggleModal(true)
+            setSlideData({ presTitle: pres.title, header: '', subHeader: '', content: '' })
         }
-        // setEditingSlideId(slideId) // Set editingSlideId for editing a slide
-        // toggleModal(true)
+        toggleModal(1)
     }
-
-
+    
+    if (!pres || !slide) return <p>Loading...</p>
     return (
         <div>
-            <button onClick={goHome}>Back to Home</button> {/* Back to Home Button */}
-            <h2>{pres.title}</h2>
+            <button onClick={goHome}>Back to Home</button>
+            {currentSlideIndex === 0 && <div>
+                {pres.authors}
+                {pres.dateOfPub}
+                {pres.title}
+            </div>}
             <p>{pres.description}</p>
 
             <div>
-            <h3>{slide.header}</h3>
+                <h3>{slide.header}</h3>
                 <h3>{slide.subHeader}</h3>
                 <h3>{slide._id}</h3>
                 <p>{slide.content}</p>
@@ -120,30 +122,18 @@ export function PresPage() {
                 </button>
                 <button onClick={deleteSlide}>Delete Slide</button>
 
-                <button onClick={() => openModal(slide._id)}>Edit Slide</button>
-                <button onClick={() => openModal(null)}>Add new slide</button>
-                {isModalOpen && (
-                    <div className="modal">
-                        <div className="modal-content">
-                            <h3>{editingSlideId ? 'Edit Slide' : 'Add New Slide'}</h3>
-                            <input
-                                type="text"
-                                placeholder={editingSlideId ? slideData.header : 'please add header'}
-                                value={slideData.header}
-                                onChange={(e) => setSlideData({ ...slideData, header: e.target.value })}
-                            />
-                            <textarea
-                                placeholder={editingSlideId ? slideData.subHeader : 'please add content'}
-                                value={slideData.content}
-                                onChange={(e) => setSlideData({ ...slideData, content: e.target.value })}
-                            />
-                            <button onClick={saveSlide}>{editingSlideId ? 'Update Slide' : 'Add Slide'}</button>
-                            <button onClick={() => toggleModal(0)}>Close</button> {/* Button to close the modal */}
-                        </div>
-                    </div>
-                )}
+                <button onClick={() => prepModal(slide._id)}>Edit Slide</button>
+                <button onClick={() => prepModal(null)}>Add new slide</button>
             </div>
+
+            <SlideModal
+                isOpen={isModalOpen}
+                slideData={slideData}
+                onChange={setSlideData}
+                onSave={saveSlide}
+                onClose={() => toggleModal(0)}
+                isEditing={!!editingSlideId}
+                />
         </div>
     )
 }
-
