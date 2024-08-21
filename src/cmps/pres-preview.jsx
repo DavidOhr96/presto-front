@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export function PresPreview({ presentation }) {
     return (
-        <div>
+        <div className='pres-preview'>
             <Link to={`/pres/${presentation.title}`}>
                 <h4>{presentation.title}</h4>
                 <p>{presentation.description}</p>

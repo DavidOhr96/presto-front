@@ -3,7 +3,7 @@ export function PresModal({isOpen, presData, onChange, onSave, onClose}){
     if (!isOpen) return null
 
     return(
-        <div className="modal">
+        <div className="pres-modal modal">
             <div className="modal-content">
                 {console.log(presData)}
                 <input

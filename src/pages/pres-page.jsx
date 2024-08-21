@@ -99,7 +99,7 @@ export function PresPage() {
 
     if (!pres) return <p>Loading...</p>
     return (
-        <div>
+        <div className='pres-page'>
             {console.log(slide)}
             {pres.slides.length > 0 ? (
                 <>

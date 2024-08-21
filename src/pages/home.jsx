@@ -47,7 +47,7 @@ export function HomePage() {
         setIsModalOpen(Boolean(state))
     }
     return (
-            <div>
+            <div className="home">
                 <button onClick={()=>toggleModal(true)}>Add New Presentation</button> {/* Add Presentation Button */}
                 <PresModal
                 isOpen={isModalOpen}

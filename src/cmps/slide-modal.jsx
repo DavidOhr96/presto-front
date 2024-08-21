@@ -4,7 +4,7 @@ export function SlideModal({ isOpen, slideData, onChange, onSave, onClose, isEdi
     if (!isOpen) return null
 
     return (
-        <div className="modal">
+        <div className="slide-modal modal">
             <div className="modal-content">
                 <h3>{isEditing ? 'Edit Slide' : 'Add New Slide'}</h3>
                 <input
