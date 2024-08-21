@@ -5,7 +5,6 @@ export function PresModal({isOpen, presData, onChange, onSave, onClose}){
     return(
         <div className="pres-modal modal">
             <div className="modal-content">
-                {console.log(presData)}
                 <input
                     type="text"
                     placeholder= 'Please add title'

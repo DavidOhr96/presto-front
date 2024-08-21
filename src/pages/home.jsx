@@ -10,7 +10,7 @@ import { PresModal } from '../cmps/pres-modal'
 export function HomePage() {
     const [press, setPress] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [presData, setPresData] = useState({ title: '', authors: '', dateOfPub: new Date, slides:[] })
+    const [presData, setPresData] = useState({ title: '', authors: '', dateOfPub: new Date, slides: [] })
     useEffect(() => {
         async function fetchPress() {
             try {
@@ -25,10 +25,11 @@ export function HomePage() {
 
     async function addNewPres() {
         try {
-            const newPres = presData
+            const dateOfPub = getDate(Date.now())
+            const newPres = { ...presData, dateOfPub }
             const addedPres = await presService.create(newPres)
             setPress(prevPress => [...prevPress, addedPres])
-            setPresData(({ title: '', authors: '', dateOfPub: new Date, slides:[] }))
+            setPresData(({ title: '', authors: '', dateOfPub: new Date, slides: [] }))
 
         } catch (err) {
             console.error('Error adding presentation:', err)
@@ -47,18 +48,30 @@ export function HomePage() {
     function toggleModal(state) {
         setIsModalOpen(Boolean(state))
     }
+    function getDate(timestamp) {
+        const today = new Date(timestamp);
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        const formattedToday = dd + '/' + mm + '/' + yyyy;
+        return formattedToday
+    }
     return (
-            <div className="home">
-                <button onClick={()=>toggleModal(true)}>Add New Presentation</button> 
-                <PresModal
+        <div className="home">
+            <button onClick={() => toggleModal(true)}>Add New Presentation</button>
+            <PresModal
                 isOpen={isModalOpen}
                 presData={presData}
                 onChange={setPresData}
                 onSave={addNewPres}
                 onClose={() => toggleModal(0)}
             />
-                <h3>Presentations:</h3>
-                <div className="pres-grid">
+            <h3>Presentations:</h3>
+            <div className="pres-grid">
                 {press.length > 0 ? (
                     press.map(p => (
                         <div key={p.id}>
@@ -69,6 +82,6 @@ export function HomePage() {
                     <p className="no-content">No presentations available</p>
                 )}
             </div>
-            </div>
+        </div>
     )
 }
