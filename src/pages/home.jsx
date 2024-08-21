@@ -28,6 +28,7 @@ export function HomePage() {
             const newPres = presData
             const addedPres = await presService.create(newPres)
             setPress(prevPress => [...prevPress, addedPres])
+            setPresData(({ title: '', authors: '', date: new Date, slides:[] }))
 
         } catch (err) {
             console.error('Error adding presentation:', err)
