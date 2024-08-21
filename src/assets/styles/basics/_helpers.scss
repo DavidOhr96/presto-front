@@ -1,3 +1,71 @@
-.modal{
+html{
     background-color: $clr1;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5); // Grayish tone for the page behind
+  z-index: 1000; // Ensure it's on top of other elements
+}
+
+// Modal Content
+.modal-content {
+  background-color: $clr4;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 500px;
+  z-index: 1001; // Ensure content is above the overlay
+}
+
+button {
+  background-color: $clr2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  margin: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+      background-color: $clr3;
+      transform: scale(1.05);
+  }
+
+  &:active {
+      background-color: $clr1;
+      transform: scale(0.98);
+  }
+}
+
+input, textarea {
+  background-color: $clr5;
+  border: 2px solid $clr2;
+  border-radius: 12px;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 16px;
+  color: $clr1;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+      color: $clr3;
+      font-style: italic;
+  }
+
+  &:focus {
+      border-color: $clr4;
+      background-color: #fff;
+      box-shadow: 0 0 8px rgba($clr4, 0.5);
+      outline: none;
+  }
 }

@@ -48,7 +48,7 @@ export function HomePage() {
     }
     return (
             <div className="home">
-                <button onClick={()=>toggleModal(true)}>Add New Presentation</button> {/* Add Presentation Button */}
+                <button onClick={()=>toggleModal(true)}>Add New Presentation</button> 
                 <PresModal
                 isOpen={isModalOpen}
                 presData={presData}
@@ -57,15 +57,17 @@ export function HomePage() {
                 onClose={() => toggleModal(0)}
             />
                 <h3>Presentations:</h3>
+                <div className="pres-grid">
                 {press.length > 0 ? (
                     press.map(p => (
                         <div key={p.id}>
                             <PresPreview presentation={p} />
-                            <button onClick={() => deletePres(p.title)}>Delete</button> {/* Delete Button */}
+                            <button onClick={() => deletePres(p.title)}>Delete</button>
                         </div>
                     ))) : (
-                    <p>No presentations available</p>
+                    <p >No presentations available</p>
                 )}
+            </div>
             </div>
     )
 }

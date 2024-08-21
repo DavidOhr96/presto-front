@@ -1,0 +1,30 @@
+.pres-preview {
+    background-color: $clr4;
+    border: 2px solid $clr3;
+    border-radius: 10px;
+    padding: 15px; // Smaller padding
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+
+    h4 {
+        color: $clr2;
+        margin-bottom: 8px;
+        font-size: 18px; // Adjust text size
+    }
+
+    p {
+        color: $clr3;
+        font-size: 12px; // Adjust text size
+    }
+
+    &:hover {
+        transform: translateY(-8px); // Slightly smaller hover effect
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+}
