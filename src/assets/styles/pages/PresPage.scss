@@ -1,0 +1,59 @@
+.pres-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  
+    .slide-frame {
+      padding: 20px;
+      border: 2px solid $clr3;
+      border-radius: 10px;
+      background-color: $clr4;
+      margin-bottom: 20px;
+      width: 80%;
+    }
+  
+    .slide-content {
+      text-align: center;
+      margin-bottom: 20px;
+  
+      h3 {
+        color: $clr1;
+        margin-bottom: 10px;
+      }
+  
+      p {
+        color: $clr2;
+        font-size: 16px;
+      }
+    }
+  
+    .slide-buttons {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+  
+      button {
+        background-color: $clr2;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+  
+        &:hover {
+          background-color: $clr1;
+          transform: scale(1.05);
+        }
+  
+        &.disabled {
+          background-color: gray;
+          cursor: not-allowed;
+        }
+      }
+    }
+  
+  
+   
+  }

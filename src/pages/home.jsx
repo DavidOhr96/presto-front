@@ -10,7 +10,7 @@ import { PresModal } from '../cmps/pres-modal'
 export function HomePage() {
     const [press, setPress] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [presData, setPresData] = useState({ title: '', authors: '', date: new Date, slides:[] })
+    const [presData, setPresData] = useState({ title: '', authors: '', dateOfPub: new Date, slides:[] })
     useEffect(() => {
         async function fetchPress() {
             try {
@@ -28,7 +28,7 @@ export function HomePage() {
             const newPres = presData
             const addedPres = await presService.create(newPres)
             setPress(prevPress => [...prevPress, addedPres])
-            setPresData(({ title: '', authors: '', date: new Date, slides:[] }))
+            setPresData(({ title: '', authors: '', dateOfPub: new Date, slides:[] }))
 
         } catch (err) {
             console.error('Error adding presentation:', err)
@@ -66,7 +66,7 @@ export function HomePage() {
                             <button onClick={() => deletePres(p.title)}>Delete</button>
                         </div>
                     ))) : (
-                    <p >No presentations available</p>
+                    <p className="no-content">No presentations available</p>
                 )}
             </div>
             </div>
