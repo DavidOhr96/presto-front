@@ -98,49 +98,55 @@ export function PresPage() {
     }
 
     if (!pres) return <p>Loading...</p>
-return (
-    <div>
-        {pres.slides.length > 0 ? (
-            <>
-                <button onClick={goHome}>Back to Home</button>
-                {currentSlideIndex === 0 && (
-                    <div>
-                        <p>{pres.authors}</p>
-                        <p>{pres.dateOfPub}</p>
-                        <h2>{pres.title}</h2>
-                    </div>
-                )}
-                <p>{pres.description}</p>
+    return (
+        <div>
+            {console.log(slide)}
+            {pres.slides.length > 0 ? (
+                <>
+                    <button onClick={goHome}>Back to Home</button>
+                    {currentSlideIndex === 0 && (
+                        <div>
+                            <p>{pres.authors}</p>
+                            <p>{pres.dateOfPub}</p>
+                            <h2>{pres.title}</h2>
+                        </div>
+                    )}
 
-                <div>
-                    <h3>{slide.header}</h3>
-                    <h3>{slide.subHeader}</h3>
-                    <h3>{slide._id}</h3>
-                    <p>{slide.content}</p>
+                    {slide ? (
+                        <div>
+                            <h3>{slide.header}</h3>
+                            <h3>{slide.subHeader}</h3>
+                            <h3>{slide._id}</h3>
+                            <p>{slide.content}</p>
 
-                    <button onClick={() => navigateSlides(-1)} disabled={currentSlideIndex === 0}>
-                        Previous Slide
-                    </button>
-                    <button onClick={() => navigateSlides(1)} disabled={currentSlideIndex === pres.slides.length - 1}>
-                        Next Slide
-                    </button>
-                    <button onClick={deleteSlide}>Delete Slide</button>
+                            <button onClick={() => navigateSlides(-1)} disabled={currentSlideIndex === 0}>
+                                Previous Slide
+                            </button>
+                            <button onClick={() => navigateSlides(1)} disabled={currentSlideIndex === pres.slides.length - 1}>
+                                Next Slide
+                            </button>
+                            <button onClick={deleteSlide}>Delete Slide</button>
 
-                    <button onClick={() => prepModal(slide._id)}>Edit Slide</button>
+                            <button onClick={() => prepModal(slide._id)}>Edit Slide</button>
+                            <button onClick={() => prepModal(null)}>Add New Slide</button>
+                        </div>
+                    ):(
+                        <p>Loading slide data...</p>
+                    )}
+                </>
+            ) : (
+                <>
+                    <p>No slides available. Please add a slide.</p>
                     <button onClick={() => prepModal(null)}>Add New Slide</button>
-                </div>
-
-                <SlideModal
-                    isOpen={isModalOpen}
-                    slideData={slideData}
-                    onChange={setSlideData}
-                    onSave={saveSlide}
-                    onClose={() => toggleModal(0)}
-                    isEditing={!!editingSlideId}
-                />
-            </>
-        ) : (
-            <p>No slides available. Please add a slide.</p>
-        )}
-    </div>
-)}
+                </>)}
+            <SlideModal
+                isOpen={isModalOpen}
+                slideData={slideData}
+                onChange={setSlideData}
+                onSave={saveSlide}
+                onClose={() => toggleModal(0)}
+                isEditing={!!editingSlideId}
+            />
+        </div>
+    )
+}
