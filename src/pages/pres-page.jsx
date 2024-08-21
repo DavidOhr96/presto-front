@@ -41,14 +41,14 @@ export function PresPage() {
         fetchSlide()
     }, [pres, currentSlideIndex])
 
-    
+
     function navigateSlides(direction) {
         const newIndex = currentSlideIndex + direction
         if (newIndex >= 0 && newIndex < pres.slides.length) {
             setCurrentSlideIndex(newIndex)
         }
     }
-    
+
     async function saveSlide() {
         try {
             if (editingSlideId) {
@@ -65,7 +65,7 @@ export function PresPage() {
             console.error('Error saving slide:', err)
         }
     }
-    
+
     async function deleteSlide() {
         try {
             await slideService.remove(slide._id)
@@ -77,15 +77,15 @@ export function PresPage() {
             console.error('Error deleting slide:', err)
         }
     }
-    
+
     function goHome() {
         navigate('/')
     }
-    
+
     function toggleModal(state) {
         setIsModalOpen(Boolean(state))
     }
-    
+
     function prepModal(slideId) {
         if (slideId) {
             setEditingSlideId(slideId)
@@ -96,44 +96,51 @@ export function PresPage() {
         }
         toggleModal(1)
     }
-    
-    if (!pres || !slide) return <p>Loading...</p>
-    return (
-        <div>
-            <button onClick={goHome}>Back to Home</button>
-            {currentSlideIndex === 0 && <div>
-                {pres.authors}
-                {pres.dateOfPub}
-                {pres.title}
-            </div>}
-            <p>{pres.description}</p>
 
-            <div>
-                <h3>{slide.header}</h3>
-                <h3>{slide.subHeader}</h3>
-                <h3>{slide._id}</h3>
-                <p>{slide.content}</p>
+    if (!pres) return <p>Loading...</p>
+return (
+    <div>
+        {pres.slides.length > 0 ? (
+            <>
+                <button onClick={goHome}>Back to Home</button>
+                {currentSlideIndex === 0 && (
+                    <div>
+                        <p>{pres.authors}</p>
+                        <p>{pres.dateOfPub}</p>
+                        <h2>{pres.title}</h2>
+                    </div>
+                )}
+                <p>{pres.description}</p>
 
-                <button onClick={() => navigateSlides(-1)} disabled={currentSlideIndex === 0}>
-                    Previous Slide
-                </button>
-                <button onClick={() => navigateSlides(1)} disabled={currentSlideIndex === pres.slides.length - 1}>
-                    Next Slide
-                </button>
-                <button onClick={deleteSlide}>Delete Slide</button>
+                <div>
+                    <h3>{slide.header}</h3>
+                    <h3>{slide.subHeader}</h3>
+                    <h3>{slide._id}</h3>
+                    <p>{slide.content}</p>
 
-                <button onClick={() => prepModal(slide._id)}>Edit Slide</button>
-                <button onClick={() => prepModal(null)}>Add new slide</button>
-            </div>
+                    <button onClick={() => navigateSlides(-1)} disabled={currentSlideIndex === 0}>
+                        Previous Slide
+                    </button>
+                    <button onClick={() => navigateSlides(1)} disabled={currentSlideIndex === pres.slides.length - 1}>
+                        Next Slide
+                    </button>
+                    <button onClick={deleteSlide}>Delete Slide</button>
 
-            <SlideModal
-                isOpen={isModalOpen}
-                slideData={slideData}
-                onChange={setSlideData}
-                onSave={saveSlide}
-                onClose={() => toggleModal(0)}
-                isEditing={!!editingSlideId}
+                    <button onClick={() => prepModal(slide._id)}>Edit Slide</button>
+                    <button onClick={() => prepModal(null)}>Add New Slide</button>
+                </div>
+
+                <SlideModal
+                    isOpen={isModalOpen}
+                    slideData={slideData}
+                    onChange={setSlideData}
+                    onSave={saveSlide}
+                    onClose={() => toggleModal(0)}
+                    isEditing={!!editingSlideId}
                 />
-        </div>
-    )
-}
+            </>
+        ) : (
+            <p>No slides available. Please add a slide.</p>
+        )}
+    </div>
+)}
