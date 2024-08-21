@@ -54,25 +54,46 @@ export function PresPage() {
             if (editingSlideId) {
                 await slideService.save(slideData)
                 setSlide(slideData)
+
             } else {
                 const newSlide = await slideService.save(slideData)
                 const updatedPres = { ...pres, slides: [...pres.slides, newSlide._id] }
                 setPres(updatedPres)
+                if (pres.slides.length === 0) {
+                    setCurrentSlideIndex(0); // Set index to the first slide (the new one)
+                } else {
+                    setCurrentSlideIndex(updatedPres.slides.length - 1)
+                }
             }
-            setSlideData({ header: '', subHeader: '', content: '' })
-            toggleModal(0)
+            setSlideData({ header: '', subHeader: '', content: '' });
+            toggleModal(0);
+
         } catch (err) {
-            console.error('Error saving slide:', err)
+            console.error('Error saving slide:', err);
         }
     }
 
     async function deleteSlide() {
         try {
+            console.log('before:', currentSlideIndex)
+
             await slideService.remove(slide._id)
+
             const updatedSlides = pres.slides.filter(s => s !== slide._id)
             const updatedPres = { ...pres, slides: updatedSlides }
             setPres(updatedPres)
-            setCurrentSlideIndex(currentSlideIndex - 1)
+
+            if (currentSlideIndex === 0) {
+                if (updatedSlides.length > 0) {
+                    setCurrentSlideIndex(0)
+                } else {
+                    setCurrentSlideIndex(null)
+                }
+            } else {
+                setCurrentSlideIndex(prevIndex => Math.max(prevIndex - 1, 0))
+            }
+
+            console.log('after:', currentSlideIndex)
         } catch (err) {
             console.error('Error deleting slide:', err)
         }
@@ -100,60 +121,61 @@ export function PresPage() {
     if (!pres) return <p>Loading...</p>
     return (
         <div className='pres-page'>
-        <button onClick={goHome}>Back to Home</button>
-        {pres.slides.length > 0 ? (
-            <>
-                {slide ? (
-                    <>
-                        <div className="slide-frame">
-                            <div className='slide-content'>
-                                {currentSlideIndex === 0 && (
-                                    <div>
-                                        <h2>{pres.title}</h2>
-                                        <p>Presentation by: {pres.authors}</p>
-                                        <p>Created on: {pres.dateOfPub}</p>
-                                    </div>
-                                )}
-                                <h2>{slide.header}</h2>
-                                <h3>{slide.subHeader}</h3>
-                                <p>{slide.content}</p>
+            <button onClick={goHome}>Back to Home</button>
+            {pres.slides.length > 0 ? (
+                <>
+                    {slide ? (
+                        <>
+                            <div className="slide-frame">
+                                <div className='slide-content'>
+                                    {currentSlideIndex === 0 && (
+                                        <div>
+                                            <h2>{pres.title}</h2>
+                                            <p>Presentation by: {pres.authors}</p>
+                                            <p>Created on: {pres.dateOfPub}</p>
+                                        </div>
+                                    )}
+                                    <h2>{slide.header}</h2>
+                                    <h3>{slide.subHeader}</h3>
+                                    <p>{slide.content}</p>
+                                </div>
                             </div>
-                        </div>
-    
-                        <div className="slide-buttons">
-                            <button
-                                onClick={() => navigateSlides(-1)}
-                                className={currentSlideIndex === 0 ? 'disabled' : ''}>
-                                Previous Slide
-                            </button>
-                            <button
-                                onClick={() => navigateSlides(1)}
-                                className={currentSlideIndex === pres.slides.length - 1 ? 'disabled' : ''}>
-                                Next Slide
-                            </button>
-                            <button onClick={deleteSlide}>Delete Slide</button>
-                            <button onClick={() => prepModal(slide._id)}>Edit Slide</button>
-                            <button onClick={() => prepModal(null)}>Add New Slide</button>
-                        </div>
-                    </>
-                ) : (
-                    <p>Loading slide data...</p>
-                )}
-            </>
-        ) : (
-            <div className="no-content">
-                <p>No slides available. Please add a slide.</p>
-                <button onClick={() => prepModal(null)}>Add New Slide</button>
-            </div>
-        )}
-    
-        <SlideModal
-            isOpen={isModalOpen}
-            slideData={slideData}
-            onChange={setSlideData}
-            onSave={saveSlide}
-            onClose={() => toggleModal(0)}
-            isEditing={!!editingSlideId}
-        />
-    </div>
-    )}
+
+                            <div className="slide-buttons">
+                                <button
+                                    onClick={() => navigateSlides(-1)}
+                                    className={currentSlideIndex === 0 ? 'disabled' : ''}>
+                                    Previous Slide
+                                </button>
+                                <button
+                                    onClick={() => navigateSlides(1)}
+                                    className={currentSlideIndex === pres.slides.length - 1 ? 'disabled' : ''}>
+                                    Next Slide
+                                </button>
+                                <button onClick={deleteSlide}>Delete Slide</button>
+                                <button onClick={() => prepModal(slide._id)}>Edit Slide</button>
+                                <button onClick={() => prepModal(null)}>Add New Slide</button>
+                            </div>
+                        </>
+                    ) : (
+                        <p>Loading slide data...</p>
+                    )}
+                </>
+            ) : (
+                <div className="no-content">
+                    <p>No slides available. Please add a slide.</p>
+                    <button onClick={() => prepModal(null)}>Add New Slide</button>
+                </div>
+            )}
+
+            <SlideModal
+                isOpen={isModalOpen}
+                slideData={slideData}
+                onChange={setSlideData}
+                onSave={saveSlide}
+                onClose={() => toggleModal(0)}
+                isEditing={!!editingSlideId}
+            />
+        </div>
+    )
+}

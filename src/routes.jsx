@@ -1,5 +1,5 @@
 import { HomePage } from './pages/home.jsx'
-import { PresPage} from './pages/pres-page.jsx'
+import { PresPage } from './pages/pres-page.jsx'
 
 const routes = [
     {
